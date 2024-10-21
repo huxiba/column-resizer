@@ -262,6 +262,31 @@ export default class ColumnResizer {
     };
 
     /**
+     * abc
+     */
+    applyWidths = (widths) => {
+        const t = this.tb;
+        let total = 0;
+        widths.forEach(e=>{
+            total += e;
+        });
+        t.style.width = total + 'px';
+        t.tableWidth = total;
+        //prevent table width changes
+        //t.classList.remove(this.FLEX);
+        t.columns.forEach((col, i) => {
+            col.style.width = widths[i] + 'px';
+            const width = widths[i];
+            col.w = width;
+            t.opt.currentWidths[i] = width;
+        });
+        //allow table width changes
+        //t.classList.add(this.FLEX);
+
+        this.syncGrips();
+    };
+
+    /**
      * Writes the current column widths to storage.
      */
     serializeStore = () => {
@@ -521,6 +546,7 @@ export default class ColumnResizer {
             handle.data = {i: index, t: t.getAttribute(this.ID), last: index === t.columnCnt - 1};
             t.grips.push(handle);
             t.columns.push(column);
+            console.log('column', index, column);
         });
         let ot = Array.from(t.querySelectorAll('td'));
         ot.concat(Array.from(t.querySelectorAll('th')));
